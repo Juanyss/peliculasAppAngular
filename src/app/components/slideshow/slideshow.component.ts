@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import Swiper from 'swiper';
 import { Movie } from '../../interfaces/movies-results';
 
@@ -7,22 +7,30 @@ import { Movie } from '../../interfaces/movies-results';
   templateUrl: './slideshow.component.html',
   styleUrls: ['./slideshow.component.css']
 })
-export class SlideshowComponent implements OnInit, AfterContentInit {
+export class SlideshowComponent implements OnInit, AfterViewInit {
 
   @Input() movies: Movie[];
 
+  mySwiper:Swiper;
   constructor() { }
 
-  ngAfterContentInit():void{
-    const mySwiper = new Swiper('.swiper-container', {
+  ngAfterViewInit():void{
+    this.mySwiper = new Swiper('.swiper-container', {
       // Optional parameters     
       loop: true,
     })
   }
 
-  ngOnInit(): void {
-    console.log(this.movies);
+  ngOnInit(): void {   
     
+  }
+
+  onSlideNext(){
+    this.mySwiper.slideNext();
+  }
+
+  onSlidePrev(){
+    this.mySwiper.slidePrev();
   }
 
 }
