@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { log } from 'console';
 import { MoviesService } from '../../services/movies.service';
 import { Movie } from '../../interfaces/movies-results';
 
@@ -30,7 +29,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(){
-    
+    this._moviesService.resetPage();
   }
 
 }

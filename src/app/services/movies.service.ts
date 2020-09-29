@@ -2,7 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { MoviesResponse, Movie } from '../interfaces/movies-results';
-import { map, tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
+import { SingleMovie } from '../interfaces/single-movie-result';
+import { Cast, CastElement } from '../interfaces/cast-movie';
 
 @Injectable({
   providedIn: 'root',
@@ -41,16 +43,27 @@ export class MoviesService {
   }
 
   resetPage(){
-    
+    this.lastMoviesPage = 1;
   }
 
   getMoviesSearch(movieText: string): Observable<Movie[]> {
-    const params = { ...this.params, page: '1', query: movieText };
-    //api.themoviedb.org/3/search/movie
+    const params = { ...this.params, page: '1', query: movieText };    
     return this.http
       .get<MoviesResponse>(`${this.baseURL}/search/movie`, {
         params,
       })
       .pipe(map((resp) => resp.results));
+  }
+
+  getMovie(id:string):Observable<SingleMovie>{
+    return this.http.get<SingleMovie>(`${this.baseURL}/movie/${id}`,
+    {params:this.params
+    }).pipe(catchError(err => of(null)))
+  }
+
+  getCast(id:string):Observable<CastElement[]>{
+    return this.http.get<Cast>(`${this.baseURL}/movie/${id}/credits`,
+    {params:this.params
+    }).pipe(map(resp => resp.cast),catchError(err => of([])))
   }
 }
